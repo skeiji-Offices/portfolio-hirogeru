@@ -1,5 +1,7 @@
-import { NextResponse } from 'next/server';
 
+import { NextResponse } from 'next/server';
+// 例: この行を追加して保存
+// 2025-12-01: Forced Vercel compile check
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
@@ -17,3 +19,5 @@ export async function GET() {
 
     return NextResponse.json(status);
 }
+
+
