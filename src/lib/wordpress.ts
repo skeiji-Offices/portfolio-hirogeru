@@ -14,24 +14,37 @@ const COMMON_FETCH_OPTIONS = {
 };
 
 export async function getPosts(page = 1, perPage = 10) {
-    const res = await fetch(`${WP_API_URL}/posts?_embed&page=${page}&per_page=${perPage}`, COMMON_FETCH_OPTIONS);
+    try {
+        const res = await fetch(`${WP_API_URL}/posts?_embed&page=${page}&per_page=${perPage}`, {
+            next: { revalidate: 3600 }, // Cache for 1 hour
+        });
 
-    if (!res.ok) {
-        // デバッグを容易にするため、サーバー側でエラーを表示
-        console.error(`Failed to fetch posts from WP API: ${res.status} ${res.statusText}`);
-        throw new Error('Failed to fetch posts');
+        if (!res.ok) {
+            console.error(`Failed to fetch posts: ${res.status} ${res.statusText}`);
+            return [];
+        }
+
+        return await res.json();
+    } catch (error) {
+        console.error('Error fetching posts:', error);
+        return [];
     }
-
-    return res.json();
 }
 
 export async function getMedia(id: number) {
-    const res = await fetch(`${WP_API_URL}/media/${id}`, COMMON_FETCH_OPTIONS);
+    try {
+        const res = await fetch(`${WP_API_URL}/media/${id}`, {
+            next: { revalidate: 3600 },
+        });
 
-    if (!res.ok) {
-        console.error(`Failed to fetch media from WP API: ${res.status} ${res.statusText}`);
-        throw new Error('Failed to fetch media');
+        if (!res.ok) {
+            console.error(`Failed to fetch media ${id}: ${res.status} ${res.statusText}`);
+            return null;
+        }
+
+        return await res.json();
+    } catch (error) {
+        console.error(`Error fetching media ${id}:`, error);
+        return null;
     }
-
-    return res.json();
 }
