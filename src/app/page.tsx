@@ -4,6 +4,7 @@ import FeaturedProjects from "@/components/FeaturedProjects";
 import BlogPostsSection from "@/components/BlogPostsSection";
 import Contact from "@/components/Contact";
 
+export const dynamic = 'force-dynamic';
 export default function Home() {
   return (
     <main className="min-h-screen bg-[var(--background)] overflow-x-hidden">
